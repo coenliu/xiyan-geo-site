@@ -141,7 +141,6 @@ def build() -> None:
         meta, body = parse_front_matter(source_path.read_text(encoding="utf-8"))
         content_html = (
             f"<article><h1>{html.escape(meta['title'])}</h1>"
-            f"<p class=\"article-meta\">分类：{html.escape(meta['category'])}</p>"
             f"{markdown_to_html(body)}</article>"
         )
         pages[meta["slug"]] = render_page(
