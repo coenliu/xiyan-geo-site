@@ -1,7 +1,9 @@
-"""Build the static site: content/*.md -> *.html at the repo root.
+"""Build the static site: a product page (hero/facts/ingredients from
+product_facts.py) plus a comparison section rendered from
+content/q_list_001.md -> index.html at the repo root.
 
-No third-party dependencies (stdlib only). Handles just the subset of
-markdown actually used by the promoted articles: #/##/### headings,
+No third-party dependencies (stdlib only). The markdown converter handles
+just the subset actually used by the promoted articles: #/##/### headings,
 **bold**, `* ` bullet lists, `---` horizontal rules, `| ... |` pipe tables,
 plus blank-line-separated paragraphs.
 """
@@ -11,6 +13,8 @@ from __future__ import annotations
 import html
 import re
 from pathlib import Path
+
+from product_facts import PRODUCT
 
 SITE_ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = SITE_ROOT / "content"
@@ -132,51 +136,69 @@ def render_page(template: str, *, title: str, description: str, content: str) ->
     return page
 
 
+def render_hero(product: dict) -> str:
+    return (
+        '<section class="hero">'
+        f'<div class="img-placeholder img-placeholder--hero">产品图占位 · {html.escape(product["product_name"])}</div>'
+        '<div class="hero__text">'
+        f'<h1>{html.escape(product["product_name"])}</h1>'
+        f'<p class="hero__tagline">{html.escape(product["tagline"])}</p>'
+        "</div>"
+        "</section>"
+    )
+
+
+def render_facts_strip(product: dict) -> str:
+    cards = "".join(
+        '<div class="fact-card">'
+        f'<span class="fact-card__label">{html.escape(fact["label"])}</span>'
+        f'<span class="fact-card__value">{html.escape(fact["value"])}</span>'
+        "</div>"
+        for fact in product["facts"]
+    )
+    return f'<section class="facts-strip">{cards}</section>'
+
+
+def render_ingredient_grid(product: dict) -> str:
+    cards = "".join(
+        '<div class="ingredient-card">'
+        f'<div class="img-placeholder img-placeholder--icon">{html.escape(ingredient["name"])}</div>'
+        f'<h3>{html.escape(ingredient["name"])}</h3>'
+        f'<p>{html.escape(ingredient["narrative"])}</p>'
+        "</div>"
+        for ingredient in product["ingredients"]
+    )
+    return f'<section class="ingredient-grid-section"><h2>核心成分</h2><div class="ingredient-grid">{cards}</div></section>'
+
+
+def render_comparison_section() -> str:
+    _, body = parse_front_matter((CONTENT_DIR / "q_list_001.md").read_text(encoding="utf-8"))
+    return (
+        '<section class="comparison-section">'
+        "<h2>同类产品对比</h2>"
+        f"{markdown_to_html(body)}"
+        "</section>"
+    )
+
+
 def build() -> None:
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
-    articles = []
-    pages: dict[str, str] = {}
 
-    for source_path in sorted(CONTENT_DIR.glob("*.md")):
-        meta, body = parse_front_matter(source_path.read_text(encoding="utf-8"))
-        content_html = (
-            f"<article><h1>{html.escape(meta['title'])}</h1>"
-            f"{markdown_to_html(body)}</article>"
-        )
-        pages[meta["slug"]] = render_page(
-            template,
-            title=meta["title"],
-            description=meta.get("description", ""),
-            content=content_html,
-        )
-        articles.append(meta)
-
-    if len(articles) == 1:
-        # A single-article site: that article IS the homepage, no separate
-        # list page or duplicate per-slug page.
-        (SITE_ROOT / "index.html").write_text(next(iter(pages.values())), encoding="utf-8")
-        print("built 1 article page as index.html")
-        return
-
-    for slug, page in pages.items():
-        (SITE_ROOT / f"{slug}.html").write_text(page, encoding="utf-8")
-
-    articles.sort(key=lambda meta: (meta["category"], meta["slug"]))
-    list_items = "\n".join(
-        f'<li><a href="{meta["slug"]}.html">{html.escape(meta["title"])}</a>'
-        f'<span class="category">{html.escape(meta["category"])}</span></li>'
-        for meta in articles
+    content = (
+        render_hero(PRODUCT)
+        + render_facts_strip(PRODUCT)
+        + render_ingredient_grid(PRODUCT)
+        + render_comparison_section()
     )
-    index_content = f"<h1>栖妍研究文章</h1><ul class=\"article-list\">{list_items}</ul>"
-    index_page = render_page(
+    page = render_page(
         template,
-        title="首页",
-        description="栖妍品牌研究内容",
-        content=index_content,
+        title=PRODUCT["product_name"],
+        description=PRODUCT["tagline"],
+        content=content,
     )
-    (SITE_ROOT / "index.html").write_text(index_page, encoding="utf-8")
+    (SITE_ROOT / "index.html").write_text(page, encoding="utf-8")
 
-    print(f"built {len(articles)} article pages + index.html")
+    print("built product page as index.html")
 
 
 if __name__ == "__main__":
