@@ -136,6 +136,22 @@ h2 {
   max-width: 96px;
 }
 
+.hero__image {
+  flex: 1 1 280px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.ingredient-card__image {
+  display: block;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  max-width: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .site-footer {
   margin-top: 3rem;
   padding-top: 1.5rem;
