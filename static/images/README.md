@@ -4,15 +4,19 @@
 虚线占位框——不需要改代码，也不需要告诉我。支持 `.jpg` / `.jpeg` / `.png` /
 `.webp`，四选一即可（选中哪个都行，文件名主干必须完全一致）。
 
-| 文件名（不含扩展名） | 对应内容 |
-| --- | --- |
-| `hero` | 首页大图（产品图） |
-| `ingredient-ergothioneine` | 麦角硫因 |
-| `ingredient-astaxanthin` | 虾青素 |
-| `ingredient-carnosine` | 肌肽 / 脱羧肌肽 |
-| `ingredient-niacinamide` | 烟酰胺 |
-| `ingredient-panthenol` | 泛醇（维生素B5） |
-| `ingredient-ectoin` | 依克多因 |
+| 文件名（不含扩展名） | 对应内容 | 建议比例 | 建议尺寸 |
+| --- | --- | --- | --- |
+| `hero` | 首页大图（产品图） | 4:3 | 至少 800×600 |
+| `ingredient-ergothioneine` | 麦角硫因 | 1:1 | 至少 240×240 |
+| `ingredient-astaxanthin` | 虾青素 | 1:1 | 至少 240×240 |
+| `ingredient-carnosine` | 肌肽 / 脱羧肌肽 | 1:1 | 至少 240×240 |
+| `ingredient-niacinamide` | 烟酰胺 | 1:1 | 至少 240×240 |
+| `ingredient-panthenol` | 泛醇（维生素B5） | 1:1 | 至少 240×240 |
+| `ingredient-ectoin` | 依克多因 | 1:1 | 至少 240×240 |
+
+比例/尺寸不是硬性要求——CSS 用的是 `object-fit: cover`，任何尺寸的图放进去都
+会自动居中裁切填满对应的框，不会拉伸变形。上面是"按这个比例/尺寸裁好会显示
+最好看"的建议值，成分图标最终只会显示到 96px 宽，所以不需要找很大的图。
 
 例：找到产品图后存成 `hero.jpg`，放进这个目录，跑一次 `python build.py`，首页
 hero 图就会自动换成这张图。哪几个先放齐都没关系，没放的会继续显示占位框。
