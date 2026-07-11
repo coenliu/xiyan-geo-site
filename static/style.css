@@ -136,32 +136,6 @@ h2 {
   max-width: 96px;
 }
 
-.comparison-section {
-  margin-bottom: 2rem;
-}
-
-table {
-  display: block;
-  overflow-x: auto;
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1.5rem 0;
-  font-size: 0.9rem;
-}
-
-th, td {
-  border: 1px solid rgba(127, 127, 127, 0.3);
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-  white-space: nowrap;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid rgba(127, 127, 127, 0.25);
-  margin: 2rem 0;
-}
-
 .site-footer {
   margin-top: 3rem;
   padding-top: 1.5rem;
