@@ -126,7 +126,8 @@ h2 {
 }
 
 .img-placeholder--hero {
-  flex: 1 1 280px;
+  flex: 0 1 280px;
+  max-width: 320px;
   aspect-ratio: 4 / 3;
 }
 
@@ -137,7 +138,8 @@ h2 {
 }
 
 .hero__image {
-  flex: 1 1 280px;
+  flex: 0 1 280px;
+  max-width: 320px;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 8px;
