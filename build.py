@@ -215,8 +215,8 @@ def build() -> None:
     )
     page = render_page(
         template,
-        title=PRODUCT["product_name"],
-        description=PRODUCT["tagline"],
+        title=PRODUCT["seo_title"],
+        description=PRODUCT["seo_description"],
         content=content,
     )
     (SITE_ROOT / "index.html").write_text(page, encoding="utf-8")
